@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include "person.h"
+#include "personLL.h"
 
 #define MAX_TITLE_LENGTH 20
 
@@ -11,12 +14,12 @@
  */
 struct appointment
 {
+    long long int id;
     time_t start;
     int duration;
     char title[MAX_TITLE_LENGTH];
+    LLNode *personenHead;
 };
-
-
 
 /**
  * @brief Get the User Input Main Menu object
@@ -31,6 +34,7 @@ int getUserInputMainMenu() {
            "4. Alle termine anzeigen\n"
            "5. Naechsten Termin anzeigen\n"
            "6. Kalenderausgabe\n"
+           "7. Termin bearbeiten\n"
            "9. Programm beenden \n");
     
     scanf("%d", &input);
@@ -63,6 +67,65 @@ int getUserInputAppointmentType() {
     return input;
 
 }
+
+long long int getUserInputEditAppointmentSelectAppointment() {
+    long long int input;
+    printf("Termin-ID eingeben:\n");
+
+    scanf("%lld", &input);
+#if WIN32 || WIN64
+    fflush(stdin);
+#else
+    getchar();
+#endif
+    return input;
+}
+
+Person getUserInputPersonCreate() {
+    char vorname[MAX_NAME_LENGTH] = "";
+    char nachName[MAX_NAME_LENGTH] = "";
+
+    puts("Bitte den Vornamen eingeben:\n");
+    scanf("%20s", vorname);
+
+#if WIN32 || WIN64
+    fflush(stdin);
+#else
+    getchar();
+#endif
+
+    puts("Bitte den Nachnamen eingeben:\n");
+    scanf("%20s", nachName);
+
+#if WIN32 || WIN64
+    fflush(stdin);
+#else
+    getchar();
+#endif
+
+    Person newPerson;
+    strncpy(newPerson.vorname, vorname, 20);
+    strncpy(newPerson.nachname, nachName, 20);
+
+    return newPerson;
+}
+
+int getUserInputPersonMenu() {
+    int input;
+    printf("1. Person hinzufügen\n"
+           "2. Person entfernen\n"
+           "3. Personen anzeigen\n"
+           "4. Abbrechen\n");
+
+    scanf("%d", &input);
+#if WIN32 || WIN64
+    fflush(stdin);
+#else
+    getchar();
+#endif
+    return input;
+}
+
 /**
  * @brief Get the Week object
  * 
@@ -120,8 +183,13 @@ struct appointment *findNextAppointment(struct appointment *appointments, int co
     return nextAppointment;
 }
 
+struct appointment *findAppointmentById(struct appointment *pAppointment, long long int id) {
+    for (int i = 0; i < sizeof(*pAppointment) / sizeof (struct appointment); i++) {
+        if (pAppointment[i].id == id) return &pAppointment[i];
+    }
 
-
+    return NULL;
+}
 
 /**
  * @brief Create a Single Appointment object
@@ -175,6 +243,12 @@ void createSingleAppointment(struct appointment **appointments, int *countAppoin
     // Set the start time using mktime
     (*appointments)[*countAppointments].start = mktime(&appointmentTime);
 
+    // Set the id
+    (*appointments)[*countAppointments].id = ((long long int) (&(*appointments)[*countAppointments])) + *countAppointments;
+
+    // Set personenHead to NULL
+    (*appointments)[*countAppointments].personenHead = NULL;
+
     // Set the duration
     (*appointments)[*countAppointments].duration = durationHours * 3600 + durationMinutes * 60;
 
@@ -219,7 +293,49 @@ int compareAppointments(const void *a, const void *b) {
     return 0; // Appointments are equal
 }
 
+// #### Start Person-management
+/**
+ * @brief Append a person to an appointment.
+ * @param appointment
+ * @param person
+ */
+void appendPersonToAppointment(struct appointment *appointment, Person person) {
+    // allocate memory for node
+    LLNode* newNode = (LLNode*)malloc(sizeof(LLNode));
 
+    // assign data to newNode
+    newNode->data = malloc(sizeof (Person));
+    memcpy(newNode->data, &person, sizeof (Person));
+
+    // assign NULL to next of newNode
+    newNode->next = NULL;
+
+    appointment->personenHead->data;
+
+    // store the head node temporarily (for later use)
+    LLNode* temp = appointment->personenHead;
+
+    // if the linked list is empty, make the newNode as head node
+    if (appointment->personenHead == NULL) {
+        newNode->prev = NULL;
+        appointment->personenHead = newNode;
+        return;
+    }
+
+    // if the linked list is not empty, traverse to the end of the linked list
+    while (temp->next != NULL)
+        temp = temp->next;
+
+    // now, the last node of the linked list is temp
+
+    // point the next of the last node (temp) to newNode.
+    temp->next = newNode;
+
+    // assign prev of newNode to temp
+    newNode->prev = temp;
+}
+
+// #### End Person-management
 
 
 int main(void) {
@@ -488,7 +604,9 @@ int main(void) {
                 printf("Alle Termine:\n");
                 for (int i = 0; i < countAppointments; i++) {
                     printf("Termin %d\n", i + 1);
-                    
+
+                    printf("Id: %lld\n", appointments[i].id);
+
                     // Zeit in struct tm-Format umwandeln
                     struct tm *localTime = localtime(&appointments[i].start);
                     
@@ -638,7 +756,56 @@ int main(void) {
         }
         break;
 
+        case 7: {
+            long long int editAppointmentSelectionId = getUserInputEditAppointmentSelectAppointment();
 
+            int personenManagementMenuSelection = getUserInputPersonMenu();
+
+            switch (personenManagementMenuSelection) {
+                case 1: {
+                    Person newPerson = getUserInputPersonCreate();
+
+                    struct appointment *selectedAppointment = findAppointmentById(appointments, editAppointmentSelectionId);
+
+                    if (selectedAppointment == NULL) break;
+
+                    // TODO: Check whether person is already in appointment.
+
+                    appendPersonToAppointment(selectedAppointment, newPerson);
+
+                    break;
+                }
+                case 2: {
+                    break;
+                }
+                case 3: {
+                    struct appointment *selectedAppointment = findAppointmentById(appointments, editAppointmentSelectionId);
+
+                    if (selectedAppointment == NULL) break;
+
+                    // store the head node temporarily (for later use)
+                    LLNode* temp = selectedAppointment->personenHead;
+
+                    // if the linked list is not empty, traverse to the end of the linked list
+                    do
+                    {
+                        printf("%s, %s\n", temp->data->nachname, temp->data->vorname);
+                        temp = temp->next;
+                    }
+                    while (temp != NULL);
+
+                    break;
+                }
+                case 4: {
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+
+            break;
+        }
 
         case 9:
             free(appointments);
