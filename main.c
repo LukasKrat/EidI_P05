@@ -35,6 +35,7 @@ int getUserInputMainMenu() {
            "5. Naechsten Termin anzeigen\n"
            "6. Kalenderausgabe\n"
            "7. Termin bearbeiten\n"
+           "8. Person verwalten\n"
            "9. Programm beenden \n");
     
     scanf("%d", &input);
@@ -365,232 +366,226 @@ int main(void) {
         switch (userInputMainMenu)
         {
         case 1:
-        {
-            int day, month, year, hour, minute, durationHours, durationMinutes;
-            char title[MAX_TITLE_LENGTH];
-
-            printf("Startzeit: (Tag Monat Jahr): ");
-            scanf("%d %d %d", &day, &month, &year);
-
-            if (!isValidDate(day, month, year)) {
-                break;
-            }
-
-            printf("Uhrzeit (Stunde Minute): ");
-            scanf("%d %d", &hour, &minute);
-
-            if(hour < 0 || hour > 23 || minute < 0 || minute > 60) {
-                printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
-                break;
-            }
-
-            printf("Dauer (Stunden Minuten): ");
-            scanf("%d %d", &durationHours, &durationMinutes);
-
-            if (durationHours > 8){
-                printf("Dauer darf maximal 8 Studen betragen!\n");
-                break;
-            }
-
-            printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
-            scanf("%s", title);
-
-            createSingleAppointment(&appointments, &countAppointments, day, month, year, hour, minute, durationHours, durationMinutes, title);
-            break;
-
-        }
-        case 2:
-            userInputAppointmentType= getUserInputAppointmentType();
-            switch (userInputAppointmentType)
             {
-            case 1:
+                int day, month, year, hour, minute, durationHours, durationMinutes;
+                char title[MAX_TITLE_LENGTH];
+
+                printf("Startzeit: (Tag Monat Jahr): ");
+                scanf("%d %d %d", &day, &month, &year);
+
+                if (!isValidDate(day, month, year)) {
+                    break;
+                }
+
+                printf("Uhrzeit (Stunde Minute): ");
+                scanf("%d %d", &hour, &minute);
+
+                if(hour < 0 || hour > 23 || minute < 0 || minute > 60) {
+                    printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
+                    break;
+                }
+
+                printf("Dauer (Stunden Minuten): ");
+                scanf("%d %d", &durationHours, &durationMinutes);
+
+                if (durationHours > 8){
+                    printf("Dauer darf maximal 8 Studen betragen!\n");
+                    break;
+                }
+
+                printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
+                scanf("%s", title);
+
+                createSingleAppointment(&appointments, &countAppointments, day, month, year, hour, minute, durationHours, durationMinutes, title);
+                break;
+
+            }
+        case 2: {
+            userInputAppointmentType = getUserInputAppointmentType();
+            switch (userInputAppointmentType) {
+                case 1:
                 /* Täglicher Termin */
-                    {
-                    
-                        int appointmentSeriesAmount = 0;
-                        printf("Anzahl der Termine in der Serie: ");
-                        scanf("%d", &appointmentSeriesAmount);
+                {
 
-                        if (appointmentSeriesAmount > 1000)
-                        {
-                            printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
-                            break;
-                        }
-                        
+                    int appointmentSeriesAmount = 0;
+                    printf("Anzahl der Termine in der Serie: ");
+                    scanf("%d", &appointmentSeriesAmount);
 
-                        int day, month, year, hour, minute;
-                        printf("Erster Termin der Serie: (Tag Monat Jahr): ");
-                        scanf("%d %d %d", &day, &month, &year);
-
-                        if (!isValidDate(day, month, year)) {
-                            break;
-                        }
-
-                        printf("Uhrzeit (Stunde Minute): ");
-                        scanf("%d %d", &hour, &minute);
-
-                        if(hour < 0 || hour > 23 || minute < 0 || minute > 60) {
-                            printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
-                            break;
-                        }
-
-                        printf("Dauer (Stunden Minuten): ");
-                        int durationHours, durationMinutes;
-                        scanf("%d %d", &durationHours, &durationMinutes);
-
-                        if (durationMinutes > 60)
-                        {
-                            printf("Minuten Dauer darf maximal 60 betragen!\n");
-                            break;
-                        }
-
-                        if (durationHours > 8){
-                            printf("Dauer darf maximal 8 Studen betragen!\n");
-                            break;
-                        }
-                        
-
-                        printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
-                        char title[MAX_TITLE_LENGTH];
-                        scanf("%s", title);
-
-
-                        for (int i = 0; i < appointmentSeriesAmount; i++)
-                        {
-                            
-                            createSingleAppointment(&appointments, &countAppointments, day+i, month, year, hour, minute, durationHours, durationMinutes, title);
-
-                        }
+                    if (appointmentSeriesAmount > 1000) {
+                        printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
+                        break;
                     }
+
+
+                    int day, month, year, hour, minute;
+                    printf("Erster Termin der Serie: (Tag Monat Jahr): ");
+                    scanf("%d %d %d", &day, &month, &year);
+
+                    if (!isValidDate(day, month, year)) {
+                        break;
+                    }
+
+                    printf("Uhrzeit (Stunde Minute): ");
+                    scanf("%d %d", &hour, &minute);
+
+                    if (hour < 0 || hour > 23 || minute < 0 || minute > 60) {
+                        printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
+                        break;
+                    }
+
+                    printf("Dauer (Stunden Minuten): ");
+                    int durationHours, durationMinutes;
+                    scanf("%d %d", &durationHours, &durationMinutes);
+
+                    if (durationMinutes > 60) {
+                        printf("Minuten Dauer darf maximal 60 betragen!\n");
+                        break;
+                    }
+
+                    if (durationHours > 8) {
+                        printf("Dauer darf maximal 8 Studen betragen!\n");
+                        break;
+                    }
+
+
+                    printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
+                    char title[MAX_TITLE_LENGTH];
+                    scanf("%s", title);
+
+
+                    for (int i = 0; i < appointmentSeriesAmount; i++) {
+
+                        createSingleAppointment(&appointments, &countAppointments, day + i, month, year, hour,
+                                                minute, durationHours, durationMinutes, title);
+
+                    }
+                }
 
                 break;
 
                 case 2:
                     /* Wöchentlicher Termin */
-                    {
-                        int appointmentSeriesAmount = 0;
-                        printf("Anzahl der Termine in der Serie: ");
-                        scanf("%d", &appointmentSeriesAmount);
+                {
+                    int appointmentSeriesAmount = 0;
+                    printf("Anzahl der Termine in der Serie: ");
+                    scanf("%d", &appointmentSeriesAmount);
 
-                        if (appointmentSeriesAmount > 1000)
-                        {
-                            printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
-                            break;
-                        }
-                        
-
-                        int day, month, year, hour, minute;
-                        printf("Erster Termin der Serie: (Tag Monat Jahr): ");
-                        scanf("%d %d %d", &day, &month, &year);
-
-                        if (!isValidDate(day, month, year)) {
-                            break;
-                        }
-
-                        printf("Uhrzeit (Stunde Minute): ");
-                        scanf("%d %d", &hour, &minute);
-
-                        if(hour < 0 || hour > 23 || minute < 0 || minute > 60) {
-                            printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
-                            break;
-                        }
-
-                        printf("Dauer (Stunden Minuten): ");
-                        int durationHours, durationMinutes;
-                        scanf("%d %d", &durationHours, &durationMinutes);
-
-                        if (durationMinutes > 60)
-                        {
-                            printf("Minuten Dauer darf maximal 60 betragen!\n");
-                            break;
-                        }
-
-                        if (durationHours > 8){
-                            printf("Dauer darf maximal 8 Studen betragen!\n");
-                            break;
-                        }
-
-                        printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
-                        char title[MAX_TITLE_LENGTH];
-                        scanf("%s", title);
-
-
-                        for (int i = 0; i < appointmentSeriesAmount; i++)
-                        {
-                            
-                            createSingleAppointment(&appointments, &countAppointments, day+(i*7), month, year, hour, minute, durationHours, durationMinutes, title);
-
-                        }
+                    if (appointmentSeriesAmount > 1000) {
+                        printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
+                        break;
                     }
+
+
+                    int day, month, year, hour, minute;
+                    printf("Erster Termin der Serie: (Tag Monat Jahr): ");
+                    scanf("%d %d %d", &day, &month, &year);
+
+                    if (!isValidDate(day, month, year)) {
+                        break;
+                    }
+
+                    printf("Uhrzeit (Stunde Minute): ");
+                    scanf("%d %d", &hour, &minute);
+
+                    if (hour < 0 || hour > 23 || minute < 0 || minute > 60) {
+                        printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
+                        break;
+                    }
+
+                    printf("Dauer (Stunden Minuten): ");
+                    int durationHours, durationMinutes;
+                    scanf("%d %d", &durationHours, &durationMinutes);
+
+                    if (durationMinutes > 60) {
+                        printf("Minuten Dauer darf maximal 60 betragen!\n");
+                        break;
+                    }
+
+                    if (durationHours > 8) {
+                        printf("Dauer darf maximal 8 Studen betragen!\n");
+                        break;
+                    }
+
+                    printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
+                    char title[MAX_TITLE_LENGTH];
+                    scanf("%s", title);
+
+
+                    for (int i = 0; i < appointmentSeriesAmount; i++) {
+
+                        createSingleAppointment(&appointments, &countAppointments, day + (i * 7), month, year, hour,
+                                                minute, durationHours, durationMinutes, title);
+
+                    }
+                }
                 break;
 
                 case 3:
                     /* 2-Wöchentlicher Termin */
 
-                    {
-                        int appointmentSeriesAmount = 0;
-                        printf("Anzahl der Termine in der Serie: ");
-                        scanf("%d", &appointmentSeriesAmount);
+                {
+                    int appointmentSeriesAmount = 0;
+                    printf("Anzahl der Termine in der Serie: ");
+                    scanf("%d", &appointmentSeriesAmount);
 
-                        if (appointmentSeriesAmount > 1000)
-                        {
-                            printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
-                            break;
-                        }
-                        
-
-                        int day, month, year, hour, minute;
-                        printf("Erster Termin der Serie: (Tag Monat Jahr): ");
-                        scanf("%d %d %d", &day, &month, &year);
-
-                        if (!isValidDate(day, month, year)) {
-                            break;
-                        }
-
-                        printf("Uhrzeit (Stunde Minute): ");
-                        scanf("%d %d", &hour, &minute);
-
-                        if(hour < 0 || hour > 23 || minute < 0 || minute > 60) {
-                            printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
-                            break;
-                        }
-
-                        printf("Dauer (Stunden Minuten): ");
-                        int durationHours, durationMinutes;
-                        scanf("%d %d", &durationHours, &durationMinutes);
-                        if (durationMinutes > 60)
-                        {
-                            printf("Minuten Dauer darf maximal 60 betragen!\n");
-                            break;
-                        }
-                        
-
-                        if (durationHours > 8){
-                            printf("Dauer darf maximal 8 Studen betragen!\n");
-                            break;
-                        }
-
-                        printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
-                        char title[MAX_TITLE_LENGTH];
-                        scanf("%s", title);
-
-
-                        for (int i = 0; i < appointmentSeriesAmount; i++)
-                        {
-                            
-                            createSingleAppointment(&appointments, &countAppointments, day+(i*14), month, year, hour, minute, durationHours, durationMinutes, title);
-
-                        }
+                    if (appointmentSeriesAmount > 1000) {
+                        printf("Zu viele Termine bitte nutze eine Anzahl unter 1000");
+                        break;
                     }
-                break;
-            
-            default:
-                puts("Ungueltige Eingabe!");
-                break;
-            }
 
-            break; 
-        
+
+                    int day, month, year, hour, minute;
+                    printf("Erster Termin der Serie: (Tag Monat Jahr): ");
+                    scanf("%d %d %d", &day, &month, &year);
+
+                    if (!isValidDate(day, month, year)) {
+                        break;
+                    }
+
+                    printf("Uhrzeit (Stunde Minute): ");
+                    scanf("%d %d", &hour, &minute);
+
+                    if (hour < 0 || hour > 23 || minute < 0 || minute > 60) {
+                        printf("Uhrzeit muss zwischen 0:00 Uhr und 23:59 liegen!\n");
+                        break;
+                    }
+
+                    printf("Dauer (Stunden Minuten): ");
+                    int durationHours, durationMinutes;
+                    scanf("%d %d", &durationHours, &durationMinutes);
+                    if (durationMinutes > 60) {
+                        printf("Minuten Dauer darf maximal 60 betragen!\n");
+                        break;
+                    }
+
+
+                    if (durationHours > 8) {
+                        printf("Dauer darf maximal 8 Studen betragen!\n");
+                        break;
+                    }
+
+                    printf("Titel (max %d Zeichen): ", MAX_TITLE_LENGTH);
+                    char title[MAX_TITLE_LENGTH];
+                    scanf("%s", title);
+
+
+                    for (int i = 0; i < appointmentSeriesAmount; i++) {
+
+                        createSingleAppointment(&appointments, &countAppointments, day + (i * 14), month, year,
+                                                hour, minute, durationHours, durationMinutes, title);
+
+                    }
+                }
+                break;
+
+                default:
+                    puts("Ungueltige Eingabe!");
+                break;
+
+
+                    break;
+            }
+        }
         case 3:
 
             {
@@ -785,8 +780,6 @@ int main(void) {
 
                     if (selectedAppointment == NULL) break;
 
-                    // TODO: Check whether person is already in appointment.
-
                     appendPersonToAppointment(selectedAppointment, newPerson);
 
                     break;
@@ -822,7 +815,47 @@ int main(void) {
 
             break;
         }
+        case 8: {
+            Person personRequested = getUserInputPersonCreate();
 
+            for (int i = 0; i < countAppointments; i++) {
+                LLNode* temp = appointments[i].personenHead;
+
+                if (temp->data == NULL) continue;
+
+                do {
+
+                    if (strcmp(temp->data->vorname, personRequested.vorname) == 0 && strcmp(temp->data->nachname, personRequested.nachname) == 0) {
+                        printf("Termin %d\n", i + 1);
+
+                        printf("Id: %lld\n", appointments[i].id);
+
+                        // Zeit in struct tm-Format umwandeln
+                        struct tm *localTime = localtime(&appointments[i].start);
+
+                        // Ausgabe der Startzeit
+                        printf("Startzeit: %d.%d.%d %02d:%02d\n",
+                               localTime->tm_mday, localTime->tm_mon + 1, localTime->tm_year + 1900,
+                               localTime->tm_hour, localTime->tm_min);
+
+                        // Dauer in Stunden und Minuten umrechnen und ausgeben
+                        int durationHours = appointments[i].duration / 3600;
+                        int durationMinutes = (appointments[i].duration % 3600) / 60;
+                        printf("Dauer: %d Stunden %d Minuten\n", durationHours, durationMinutes);
+
+                        printf("Titel: %s\n", appointments[i].title);
+                        printf("\n");
+
+                    }
+                    else {
+                        temp = temp->next;
+                    }
+                }
+                while (temp->next != NULL);
+            }
+
+            break;
+        }
         case 9:
             free(appointments);
             return 0;
