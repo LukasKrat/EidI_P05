@@ -184,8 +184,8 @@ struct appointment *findNextAppointment(struct appointment *appointments, int co
     return nextAppointment;
 }
 
-struct appointment *findAppointmentById(struct appointment *pAppointment, long long int id) {
-    for (int i = 0; i < sizeof(*pAppointment) / sizeof (struct appointment); i++) {
+struct appointment *findAppointmentById(int appointmentsCount, struct appointment *pAppointment, long long int id) {
+    for (int i = 0; i < appointmentsCount; i++) {
         if (pAppointment[i].id == id) return &pAppointment[i];
     }
 
@@ -890,7 +890,7 @@ int main(void) {
                 case 1: {
                     Person newPerson = getUserInputPersonCreate();
 
-                    struct appointment *selectedAppointment = findAppointmentById(appointments, editAppointmentSelectionId);
+                    struct appointment *selectedAppointment = findAppointmentById(countAppointments, appointments, editAppointmentSelectionId);
 
                     if (selectedAppointment == NULL) break;
 
@@ -902,7 +902,7 @@ int main(void) {
                     break;
                 }
                 case 3: {
-                    struct appointment *selectedAppointment = findAppointmentById(appointments, editAppointmentSelectionId);
+                    struct appointment *selectedAppointment = findAppointmentById(countAppointments, appointments, editAppointmentSelectionId);
 
                     if (selectedAppointment == NULL) break;
 
@@ -935,7 +935,7 @@ int main(void) {
             for (int i = 0; i < countAppointments; i++) {
                 LLNode* temp = appointments[i].personenHead;
 
-                if (temp->data == NULL) continue;
+                if (temp == NULL || temp->data == NULL) continue;
 
                 do {
 
