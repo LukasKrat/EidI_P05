@@ -952,12 +952,13 @@ int main(void) {
                         printf("Titel: %s\n", appointments[i].title);
                         printf("\n");
 
+                        temp = temp->next;
                     }
                     else {
                         temp = temp->next;
                     }
                 }
-                while (temp->next != NULL);
+                while (temp != NULL);
             }
 
             break;
