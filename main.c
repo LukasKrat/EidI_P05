@@ -351,6 +351,14 @@ void appendPersonToAppointment(struct appointment *appointment, Person person) {
     newNode->prev = temp;
 }
 
+/**
+ *
+ * @param strlenA
+ * @param a
+ * @param strlenB
+ * @param b
+ * @return 0 in case the order is identical; 1 in case b comes after a; -1 in case a comes after b.
+ */
 int compareAlphabeticRank(int strlenA, char a[strlenA], int strlenB, char b[strlenB]) {
     /*
     char base[strlenA < strlenB ? strlenA : strlenB];
