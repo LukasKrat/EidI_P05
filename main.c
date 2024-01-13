@@ -351,6 +351,98 @@ void appendPersonToAppointment(struct appointment *appointment, Person person) {
     newNode->prev = temp;
 }
 
+int compareAlphabeticRank(int strlenA, char a[strlenA], int strlenB, char b[strlenB]) {
+    /*
+    char base[strlenA < strlenB ? strlenA : strlenB];
+    int baseLength = strlenA < strlenB ? strlenA : strlenB;
+
+    char cmp[strlenA < strlenB ? strlenB : strlenA];
+    int cmpLength = strlenA < strlenB ? strlenB : strlenA;
+
+    if (strlenA < strlenB) {
+        strncpy(base, a, strlenA);
+        strncpy(cmp, b, strlenB);
+    }
+    else {
+        strncpy(base, b, strlenB);
+        strncpy(cmp, a, strlenA);
+    }
+     */
+
+    for (int i = 0; i < (strlenA > strlenB ? strlenB : strlenA); i++) {
+        if (a[i] == b[i]) continue;
+        else if (a[i] < b[i]) return 1;
+        else if (a[i] > b[i]) return -1;
+    }
+
+    return 0;
+}
+
+void insertPersonToAppointmentAlphabetically(struct appointment *appointment, Person person) {
+    // allocate memory for node
+    LLNode* newNode = (LLNode*)malloc(sizeof(LLNode));
+
+    // assign data to newNode
+    newNode->data = malloc(sizeof (Person));
+    memcpy(newNode->data, &person, sizeof (Person));
+
+    // assign NULL to next of newNode
+    newNode->next = NULL;
+
+    appointment->personenHead->data;
+
+    // store the head node temporarily (for later use)
+    LLNode* currentNodeCursor = appointment->personenHead;
+
+    // if the linked list is empty, make the newNode as head node
+    if (appointment->personenHead == NULL) {
+        newNode->prev = NULL;
+        appointment->personenHead = newNode;
+        return;
+    }
+
+    int isNewPersonAlreadyInAppointment = checkPersonExistsInAppointment(appointment, person);
+
+    if (isNewPersonAlreadyInAppointment == 1) return;
+
+    // if the linked list is not empty, traverse to the end of the linked list
+    /*
+    while (temp->next != NULL)
+        temp = temp->next;
+    */
+
+    while (currentNodeCursor->next != NULL && compareAlphabeticRank(MAX_NAME_LENGTH, currentNodeCursor->data->nachname, MAX_NAME_LENGTH, person.nachname) >= 0) {
+        currentNodeCursor = currentNodeCursor->next;
+    }
+
+    if (currentNodeCursor->prev != NULL)
+    {
+        currentNodeCursor = currentNodeCursor->prev;
+
+        // currentNodeCursor now contains the value which should be BEFORE person.
+
+        // set next of newNode to next of prev node
+        newNode->next = currentNodeCursor->next;
+
+        // set next of prev node to newNode
+        currentNodeCursor->next = newNode;
+
+        // set prev of newNode to the previous node
+        newNode->prev = currentNodeCursor;
+
+        // set prev of newNode's next to newNode
+        if (newNode->next != NULL)
+            newNode->next->prev = newNode;
+    }
+    else {
+        currentNodeCursor->prev = newNode;
+        newNode->prev = NULL;
+        newNode->next = currentNodeCursor;
+
+        appointment->personenHead = newNode;
+    }
+}
+
 // #### End Person-management
 
 
@@ -794,7 +886,7 @@ int main(void) {
 
                     if (selectedAppointment == NULL) break;
 
-                    appendPersonToAppointment(selectedAppointment, newPerson);
+                    insertPersonToAppointmentAlphabetically(selectedAppointment, newPerson);
 
                     break;
                 }
