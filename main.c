@@ -633,7 +633,21 @@ int main(void) {
 
 
                     printf("Titel: %s\n", appointments[i].title);
-                    printf("\n");
+                    puts("Teilnehmer:innen:");
+
+                    LLNode* temp = appointments[i].personenHead;
+
+                    if (temp != NULL) {
+                        // if the linked list is not empty, traverse to the end of the linked list
+                        do
+                        {
+                            printf("%s, %s\n", temp->data->nachname, temp->data->vorname);
+                            temp = temp->next;
+                        }
+                        while (temp != NULL);
+                    }
+
+                    printf("\n\n");
                 }
             }
             break;
