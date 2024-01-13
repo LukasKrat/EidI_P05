@@ -293,6 +293,17 @@ int compareAppointments(const void *a, const void *b) {
     return 0; // Appointments are equal
 }
 
+int checkPersonExistsInAppointment(struct appointment *appointment, Person person) {
+    LLNode* temp = appointment->personenHead;
+
+    while (temp->next != NULL) {
+        if (temp->data->vorname == person.vorname && temp->data->nachname == person.nachname) { return 1; }
+        temp = temp->next;
+    }
+
+    return 0;
+}
+
 // #### Start Person-management
 /**
  * @brief Append a person to an appointment.
@@ -322,6 +333,10 @@ void appendPersonToAppointment(struct appointment *appointment, Person person) {
         return;
     }
 
+    int isNewPersonAlreadyInAppointment = checkPersonExistsInAppointment(appointment, person);
+
+    if (isNewPersonAlreadyInAppointment == 1) return;
+
     // if the linked list is not empty, traverse to the end of the linked list
     while (temp->next != NULL)
         temp = temp->next;
@@ -350,6 +365,7 @@ int main(void) {
         switch (userInputMainMenu)
         {
         case 1:
+        {
             int day, month, year, hour, minute, durationHours, durationMinutes;
             char title[MAX_TITLE_LENGTH];
 
@@ -381,8 +397,8 @@ int main(void) {
 
             createSingleAppointment(&appointments, &countAppointments, day, month, year, hour, minute, durationHours, durationMinutes, title);
             break;
-        
-        
+
+        }
         case 2:
             userInputAppointmentType= getUserInputAppointmentType();
             switch (userInputAppointmentType)
