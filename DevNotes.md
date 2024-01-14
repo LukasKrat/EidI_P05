@@ -6,4 +6,4 @@
 - [ ] Fix segmentation fault / crash (?) when trying to manage persons / person-list in appointment when these persons don't exist.
 
 ## Sources
-https://www.programiz.com/dsa/doubly-linked-list
+- https://www.programiz.com/dsa/doubly-linked-list
