@@ -297,10 +297,11 @@ int compareAppointments(const void *a, const void *b) {
 int checkPersonExistsInAppointment(struct appointment *appointment, Person person) {
     LLNode* temp = appointment->personenHead;
 
-    while (temp->next != NULL) {
-        if (temp->data->vorname == person.vorname && temp->data->nachname == person.nachname) { return 1; }
+    do {
+        if (strcmp(temp->data->vorname, person.vorname) == 0 && strcmp(temp->data->nachname, person.nachname) == 0) { return 1; }
         temp = temp->next;
     }
+    while (temp->next != NULL);
 
     return 0;
 }
@@ -451,8 +452,46 @@ void insertPersonToAppointmentAlphabetically(struct appointment *appointment, Pe
     }
 }
 
-// #### End Person-management
+void removePersonFromAppointment(struct appointment *appointment, Person person) {
+    appointment->personenHead->data;
 
+    // store the head node temporarily (for later use)
+    LLNode* currentNodeCursor = appointment->personenHead;
+
+    // if the linked list is empty, make the newNode as head node
+    if (appointment->personenHead == NULL) {
+        return;
+    }
+
+    int isNewPersonAlreadyInAppointment = checkPersonExistsInAppointment(appointment, person);
+
+    if (isNewPersonAlreadyInAppointment == 0) return;
+
+    // if the linked list is not empty, traverse to the end of the linked list
+    /*
+    while (temp->next != NULL)
+        temp = temp->next;
+    */
+
+    while (currentNodeCursor->next != NULL && (strcmp(currentNodeCursor->data->nachname, person.nachname) != 0 && strcmp(currentNodeCursor->data->vorname, person.vorname) != 0)) {
+        currentNodeCursor = currentNodeCursor->next;
+    }
+
+    if (appointment->personenHead == currentNodeCursor) {
+        appointment->personenHead = currentNodeCursor->next;
+    }
+    else if (currentNodeCursor->next != NULL) {
+        currentNodeCursor->next->prev = currentNodeCursor->prev;
+    }
+    else if (currentNodeCursor->prev != NULL)
+    {
+        currentNodeCursor->prev->next = currentNodeCursor->next;
+    }
+
+    free(currentNodeCursor);
+}
+
+// #### End Person-management
 
 int main(void) {
 
@@ -899,7 +938,17 @@ int main(void) {
                     break;
                 }
                 case 2: {
-                    break;
+                    {
+                        Person newPerson = getUserInputPersonCreate();
+
+                        struct appointment *selectedAppointment = findAppointmentById(countAppointments, appointments, editAppointmentSelectionId);
+
+                        if (selectedAppointment == NULL) break;
+
+                        removePersonFromAppointment(selectedAppointment, newPerson);
+
+                        break;
+                    }
                 }
                 case 3: {
                     struct appointment *selectedAppointment = findAppointmentById(countAppointments, appointments, editAppointmentSelectionId);
