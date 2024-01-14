@@ -36,7 +36,8 @@ int getUserInputMainMenu() {
            "6. Kalenderausgabe\n"
            "7. Termin bearbeiten\n"
            "8. Person verwalten\n"
-           "9. Programm beenden \n");
+           "9. In Datei exportieren\n"
+           "10. Programm beenden \n");
     
     scanf("%d", &input);
     #if WIN32 || WIN64
@@ -1020,7 +1021,63 @@ int main(void) {
 
             break;
         }
-        case 9:
+        case 9: {
+            FILE *pFile;
+
+            pFile=fopen("export.txt", "a");
+
+            if(pFile==NULL) {
+                perror("Error opening file.");
+            }
+            else {
+                for (int i = 0; i < countAppointments; i++)
+                {
+                    // Zeit in struct tm-Format umwandeln
+                    struct tm *localTime = localtime(&appointments[i].start);
+
+                    // Dauer in Stunden und Minuten umrechnen und ausgeben
+                    int durationHours = appointments[i].duration / 3600;
+                    int durationMinutes = (appointments[i].duration % 3600) / 60;
+
+                    fprintf(pFile,
+                            "Termin %d\n"
+                            "Datum: %d.%d.%d %02d:%02d\n"
+                            "Dauer: %d Stunden %d Minuten\n"
+                            "Titel: %s\n",
+                            i+1,
+                            localTime->tm_mday,
+                            localTime->tm_mon + 1,
+                            localTime->tm_year + 1900,
+                            localTime->tm_hour,
+                            localTime->tm_min,
+                            durationHours,
+                            durationMinutes,
+                            appointments[i].title
+                            );
+
+                    fprintf(pFile, "Teilnehmer:innen:\n");
+
+                    LLNode* temp = appointments[i].personenHead;
+
+                    if (temp != NULL) {
+                        // if the linked list is not empty, traverse to the end of the linked list
+                        do
+                        {
+                            fprintf(pFile, "%s, %s\n", temp->data->nachname, temp->data->vorname);
+                            temp = temp->next;
+                        }
+                        while (temp != NULL);
+                    }
+
+                    fprintf(pFile, "\n\n");
+
+                }
+            }
+            fclose(pFile);
+
+            break;
+        }
+        case 10:
             free(appointments);
             return 0;
         
