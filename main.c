@@ -544,7 +544,7 @@ int main(void) {
             userInputAppointmentType = getUserInputAppointmentType();
             switch (userInputAppointmentType) {
                 case 1:
-                /* Täglicher Termin */
+                    /* Täglicher Termin */
                 {
 
                     int appointmentSeriesAmount = 0;
@@ -601,7 +601,7 @@ int main(void) {
                     }
                 }
 
-                break;
+                    break;
 
                 case 2:
                     /* Wöchentlicher Termin */
@@ -658,7 +658,7 @@ int main(void) {
 
                     }
                 }
-                break;
+                    break;
 
                 case 3:
                     /* 2-Wöchentlicher Termin */
@@ -716,16 +716,13 @@ int main(void) {
 
                     }
                 }
-                break;
-
+                    break;
                 default:
                     puts("Ungueltige Eingabe!");
-                break;
-
-
                     break;
             }
         }
+            break;
         case 3:
 
             {
