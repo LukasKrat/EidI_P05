@@ -302,7 +302,7 @@ int checkPersonExistsInAppointment(struct appointment *appointment, Person perso
         if (strcmp(temp->data->vorname, person.vorname) == 0 && strcmp(temp->data->nachname, person.nachname) == 0) { return 1; }
         temp = temp->next;
     }
-    while (temp->next != NULL);
+    while (temp != NULL);
 
     return 0;
 }
@@ -724,7 +724,6 @@ int main(void) {
         }
             break;
         case 3:
-
             {
                 int day=0,month=0,year=0;
                 printf("Bitte geben Sie das Datum des Termins ein (Tag Monat Jahr): ");
