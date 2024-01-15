@@ -427,7 +427,7 @@ void insertPersonToAppointmentAlphabetically(struct appointment *appointment, Pe
 
     if (currentNodeCursor->prev != NULL)
     {
-        currentNodeCursor = currentNodeCursor->prev;
+        //currentNodeCursor = currentNodeCursor->prev; // commented-out because it potentially lead
 
         // currentNodeCursor now contains the value which should be BEFORE person.
 
