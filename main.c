@@ -298,6 +298,9 @@ int compareAppointments(const void *a, const void *b) {
 int checkPersonExistsInAppointment(struct appointment *appointment, Person person) {
     LLNode* temp = appointment->personenHead;
 
+    /// Check whether the appointment has no persons at all and return 0 if this is the case.
+    if (temp == NULL) return 0;
+
     do {
         if (strcmp(temp->data->vorname, person.vorname) == 0 && strcmp(temp->data->nachname, person.nachname) == 0) { return 1; }
         temp = temp->next;
